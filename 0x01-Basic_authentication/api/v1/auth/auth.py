@@ -32,9 +32,3 @@ class Auth:
         return None
         """
         return None
-
-
-class BasicAuth(Auth):
-    """ "BasicAuth Class"""
-
-    pass
