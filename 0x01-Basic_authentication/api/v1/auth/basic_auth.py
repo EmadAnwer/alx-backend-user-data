@@ -29,3 +29,16 @@ class BasicAuth(Auth):
                 return decoded_string
             except (base64.binascii.Error, UnicodeDecodeError) as error:
                 return None
+
+    def extract_user_credentials(
+        self, decoded_base64_authorization_header: str
+    ) -> (str, str):
+        """extract_user_credentials"""
+        if isinstance(decoded_base64_authorization_header, str):
+            index = decoded_base64_authorization_header.find(":")
+            if index != -1:
+                return (
+                    decoded_base64_authorization_header[:index],
+                    decoded_base64_authorization_header[index + 1:],
+                )
+        return (None, None)
