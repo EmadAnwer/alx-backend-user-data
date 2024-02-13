@@ -13,9 +13,12 @@ class Auth:
         arg:
             @path
             @excluded_paths
-
+        return True if path not in excluded_paths
         """
-        return False
+        if bool(path and excluded_paths):
+            path = path + "/" if path[-1] != "/" else path
+            return path not in excluded_paths
+        return True
 
     def authorization_header(self, request=None) -> str:
         """authorization header method
