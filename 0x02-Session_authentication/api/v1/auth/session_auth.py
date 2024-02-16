@@ -25,7 +25,7 @@ class SessionAuth(Auth):
         if bool(isinstance(session_id, str)):
             return self.user_id_by_session_id.get(session_id)
 
-    def current_user(self, request=None) -> TypeVar("User"):
+    def current_user(self, request=None) -> str:
         """current_user"""
         user_id = self.user_id_for_session_id(self.session_cookie(request))
-        return user_id
+        return User.get(user_id)
