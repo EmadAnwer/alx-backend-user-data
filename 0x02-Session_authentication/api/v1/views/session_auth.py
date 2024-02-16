@@ -32,3 +32,14 @@ def session_authentication():
     response.set_cookie(getenv("SESSION_NAME"), session_id)
 
     return response
+
+
+@app_views.route("/auth_session/logout", methods=["DELETE"],
+                 strict_slashes=False)
+def session_logout():
+    """handles all routes for the Session authentication"""
+    from api.v1.app import auth
+
+    if auth.destroy_session(request):
+        return jsonify({}), 200
+    abort(404)
