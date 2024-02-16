@@ -26,6 +26,11 @@ elif getenv("AUTH_TYPE") == "session_auth":
 
     auth = SessionAuth()
 
+if getenv("AUTH_TYPE") == "session_exp_auth":
+    from api.v1.auth.session_exp_auth import SessionExpAuth
+
+    auth = SessionExpAuth()
+
 
 @app.before_request
 def before_request():
@@ -35,11 +40,12 @@ def before_request():
             "/api/v1/status/",
             "/api/v1/unauthorized/",
             "/api/v1/forbidden/",
-            "/api/v1/auth_session/login/"
+            "/api/v1/auth_session/login/",
         ]
         if auth.require_auth(request.path, excluded_paths):
-            if not auth.authorization_header(request) and \
-                    not auth.session_cookie(request):
+            if not auth.authorization_header(request) and not auth.session_cookie(
+                request
+            ):
                 abort(401)
             if not auth.current_user(request):
                 abort(403)
