@@ -46,7 +46,7 @@ def before_request():
                         auth.session_cookie(request)):
                 abort(401)
 
-        request.current_user = auth.current_user(request)
+    request.current_user = auth.current_user(request)
 
 
 @app.errorhandler(404)
