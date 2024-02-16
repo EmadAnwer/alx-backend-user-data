@@ -25,10 +25,20 @@ def view_one_user(user_id: str = None) -> str:
       - User object JSON represented
       - 404 if the User ID doesn't exist
     """
-    if user_id == "me" and hasattr(request, "current_user") and \
-            request.current_user is not None:
-        return jsonify(request.current_user.to_json())
-    if user_id is None or user_id == "me":
+def view_one_user(user_id: str = None) -> str:
+    """ GET /api/v1/users/:id
+    Path parameter:
+      - User ID
+    Return:
+      - User object JSON represented
+      - 404 if the User ID doesn't exist
+    """
+    if user_id == "me":
+        if request.current_user is None:
+            abort(404)
+        user_id = request.current_user.id
+
+    if user_id is None:
         abort(404)
     user = User.get(user_id)
     if user is None:
