@@ -5,7 +5,7 @@ flask app module to interact with the authentication database.
 
 
 import email
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort
 from auth import Auth
 
 
@@ -30,6 +30,18 @@ def register_user():
         return jsonify({"email": user.email, "message": "user created"}), 200
     except ValueError as err:
         return jsonify({"message": "email already registered"}), 400
+
+
+@app.route("/sessions", methods=["POST"])
+def login():
+    """Login route"""
+    email = request.form["email"]
+    password = request.form["password"]
+    if AUTH.valid_login(email, password):
+        session_id = AUTH.create_session(email)
+        if session_id:
+            return jsonify({"email": email, "message": "logged in"}), 200
+    abort(401)
 
 
 if __name__ == "__main__":
