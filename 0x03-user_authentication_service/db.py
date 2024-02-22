@@ -35,3 +35,10 @@ class DB:
         self._session.add(user)
         self._session.commit()
         return user
+
+    def find_user_by (self, **kwargs) -> User:
+        """Find a user by a specific attribute"""
+        if not kwargs:
+            raise InvalidRequestError
+        user = self._session.query(User).filter_by(**kwargs).one()
+        return user
