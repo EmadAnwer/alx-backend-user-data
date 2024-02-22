@@ -42,3 +42,16 @@ class DB:
             raise InvalidRequestError
         user = self._session.query(User).filter_by(**kwargs).one()
         return user
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """Update a user"""
+        user = self.find_user_by(id=user_id)
+
+        for key, value in kwargs.items():
+            if hasattr(user, key):
+                setattr(user, key, value)
+            else:
+                raise ValueError
+
+        self._session.commit()
+        return None
