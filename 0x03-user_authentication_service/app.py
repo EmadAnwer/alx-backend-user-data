@@ -5,7 +5,7 @@ flask app module to interact with the authentication database.
 
 
 import email
-from flask import Flask, jsonify, request, abort, make_response
+from flask import Flask, jsonify, request, abort, make_response, redirect
 from auth import Auth
 
 
@@ -46,6 +46,17 @@ def login():
             response.set_cookie("session_id", session_id)
             return response
     abort(401)
+
+
+@app.route("/sessions", methods=["DELETE"])
+def logout():
+    """Logout route"""
+    session_id = request.cookies.get("session_id")
+    print(session_id)
+    if session_id:
+        AUTH.destroy_session(session_id)
+        redirect("/")
+    abort(403)
 
 
 if __name__ == "__main__":
