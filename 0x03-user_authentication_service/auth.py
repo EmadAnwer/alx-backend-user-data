@@ -42,8 +42,7 @@ class Auth:
         """Validate a user's credentials."""
         try:
             user = self._db.find_user_by(email=email)
-            return bcrypt.checkpw(password.encode("utf-8"),
-                                  user.hashed_password)
+            return bcrypt.checkpw(password.encode("utf-8"), user.hashed_password)
         except NoResultFound:
             return False
 
@@ -54,5 +53,20 @@ class Auth:
             user = self._db.find_user_by(email=email)
             self._db.update_user(user.id, session_id=session_id)
             return session_id
+        except NoResultFound:
+            return None
+
+    def get_user_from_session_id(self, session_id: str) -> str:
+        """Get a user from a session_id"""
+        try:
+            user = self._db.find_user_by(session_id=session_id)
+            return user
+        except NoResultFound:
+            return None
+
+    def destroy_session(self, user_id: int) -> None:
+        """Destroy a session"""
+        try:
+            self._db.update_user(user_id, session_id=None)
         except NoResultFound:
             return None
