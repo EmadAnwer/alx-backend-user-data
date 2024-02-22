@@ -42,8 +42,7 @@ class Auth:
         """Validate a user's credentials."""
         try:
             user = self._db.find_user_by(email=email)
-            return bcrypt.checkpw(password.encode("utf-8"),
-                                  user.hashed_password)
+            return bcrypt.checkpw(password.encode("utf-8"), user.hashed_password)
         except NoResultFound:
             return False
 
@@ -71,3 +70,12 @@ class Auth:
             self._db.update_user(user_id, session_id=None)
         except NoResultFound:
             return None
+
+    def get_reset_password_token(self, email: str) -> str:
+        """Get a reset password token"""
+
+        user_token = self.create_session(email)
+        if user_token:
+            return user_token
+        else:
+            raise ValueError
